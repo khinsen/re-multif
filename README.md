@@ -1,5 +1,7 @@
 # Replicating a Multi-Functional Synthetic Gene Network in Biological Computing
 
+[![DOI](https://zenodo.org/badge/214520225.svg)](https://zenodo.org/badge/latestdoi/214520225)
+
 Here we replicate the work of Purcell, di Bernardo, Grierson and Savery on [A Multi-Functional Synthetic Gene Network: A Frequency Multiplier, Oscillator and Switch](https://dx.doi.org/10.1371%2Fjournal.pone.0016140) for [ReScience](https://rescience.github.io/).
 
 
