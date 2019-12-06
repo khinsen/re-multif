@@ -30,7 +30,7 @@
 
   We borrow the network's mathematical description from the original paper to replicate each of the hereby presented simulations.
   Unless otherwise stated, experimental results on the next section use initial conditions $R1 = R2 = 50nM$, $R3 = R4 = 0nM$ and reaction parameters are the same as given in the reference work.
-  All numerical simulations were performed in Octave (version 5.1.0) using Euler's method with a fixed step size of $60$ seconds (yielding an iteration count totaling around $6000$ steps).
+  All numerical simulations were performed in Octave (version 5.1.0) using Euler's method with a fixed step size of $60$ seconds.
   The choice is justified based on the duration of experiments, the shortest of which take at least four days (virtual simulated time) in order to observe a couple of periods on the oscillating output of the frequency divider.
 
   Every deterministic experiment was carried in two systems: one considering the full set of \ac{ode}s and another with the \ac{qssa} approximation that is used throughout that study.
@@ -87,7 +87,7 @@
 
     As mentioned in the original study, frequency division functionality can only be observed after a specific period threshold.
     We ran simulations over a range of input frequencies and found the period-doubling bifurcation to be located near values of $0.8 \times 10^5$ seconds ($\sim 22.22$ hours) in both full and reduced models.
-    Although this confirms the network's capability to interface with long-period oscillators, these results greatly diverge from those in the reference work, which state this threshold could be observed at input periods of approximately $0.275 \times 10^5$ seconds ($\sim 8$ hours).
+    Although this confirms the network's capability to interface with long-period oscillators, these results greatly diverge from those in the reference work, which state this threshold could be observed at input periods of approximately $0.275 \times 10^5$ seconds ($\sim 8$ hours). % @TODO: get in touch with original authors about PD bifurcation
 
     \begin{figure}[!htb]
       \centering
@@ -125,7 +125,7 @@
     \end{figure}
 
     Once again, oscillatory amplitude differs between models in experiment $2$, with R1 and R4 each peaking at \SI{35.60}{\nano M} and \SI{9.16}{\nano M} in the complete system (Figure \ref{fig:bifurcation-2}) while going up to \SI{30.08}{\nano M} and \SI{8.18}{\nano M} in the \ac{qssa} reduction (not shown).
-    Other experiments do not present such significant offset. % @XXX: really? confirm with actual data
+    Other experiments do not present such significant offset.
 
     \begin{figure}[!htbp]
       \centering
@@ -177,9 +177,9 @@
 
     As revealed during bifurcation analysis, the network exhibits bistability when input concentration is held outside the oscillatory range, that is, at levels lower than \SI{0.4}{\nano M} or greater than \SI{7}{\nano M}.
     Figures \ref{fig:switch-A}-\ref{fig:switch-D} illustrate simulations with the system being used as a toggle switch which is ``triggered'' by varying binding affinity of particular repressors as described in the reference work.
-    This set of experiments were exactly reproduced and no significant difference is found between reduced and full models. % @XXX: again, show this comparison data
+    This set of experiments were exactly reproduced and no significant difference is found between reduced and full models.
 
-    % @FIXME: toggle switch function must be tested from non-pristine (previously used) states
+    % @TODO: toggle switch function must be tested from non-pristine (previously used) states
 
     \begin{figure}[!htb]
       \centering
@@ -210,6 +210,7 @@
 
   \subsection{Stochastic Simulations}
 
+    % @TODO: get in touch with original authors about Gaussian noise
     We implemented the \ac{cles} shown in the related supporting information document provided by \citet{multif}, but it was not possible to verify similar results without modifications to the noise-inducing function.
     While original authors state the usage of Gaussian noise with zero mean and variance of 1, simply employing Octave's \code{randn} function -- which provides such a distribution \cite{randn} -- proved being too noisy as stochastic fluctuations began dominating the model's behaviour.
     It was found through trial and error that downscaling random numbers by a factor of $s \in [\frac{1}{100}, \frac{1}{10}]$ (and consequently scaling variance by $s^2$) would bring results closer to what is seen in the reference work.
@@ -259,6 +260,7 @@
     We verified that among the three functionalities, frequency division possesses less robustness to intrinsic noise.
     During the stage where input is applied and proteins are all at low concentrations, random fluctuations may cause unintended oscillations as a pair of repressors rise in concentration and prevent transcription of the other two.
     An example of such irregular oscillatory behaviour is given in Figure \ref{fig:stochastic-freqdiv-skip}.
+    % @TODO: get in touch with original authors about irregular stochastic oscillations
 
 
   % \subsection{Promoter Leakiness}
