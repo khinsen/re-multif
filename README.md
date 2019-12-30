@@ -1,4 +1,4 @@
-# Replicating a Multi-Functional Synthetic Gene Network in Biological Computing
+# Replicating a Multi-Functional Synthetic Gene Network
 
 [![DOI](https://zenodo.org/badge/214520225.svg)](https://zenodo.org/badge/latestdoi/214520225)
 
