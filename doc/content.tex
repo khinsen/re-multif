@@ -15,9 +15,10 @@
   Amidst forward-engineered biochemical systems, genetic oscillators have been a focus of research \cite{optoscillator} as they are required for the correct operation of synchronous sequential circuits and can also provide persistent periodic \textit{stimulus} to other regulatory networks which may rely on them \cite{bioapps}.
   Genetic switches present another functionality specially useful \cite{bioapps} to digital logic: the ability to toggle between on or off states by either activating or repressing the expression of a certain gene makes them equivalent to a cellular memory unit \cite{youtuber}.
   One study has shown that combining an oscillator with a toggle switch under certain circumstances will result in the generation of a clock-like near square wave signal \cite{clock}.
+  Until recently, though, there was no genetic network capable of exhibiting both of these behaviours and alternating between them.
 
   \citet{multif} presented the \textit{in silico} design of a novel genetic regulatory network which performs frequency division on an oscillating input.
-  During experiments, that model was also discovered able to behave as a self-induced oscillator or toggle switch -- thus ressembling the most successful electronic \ac{ic} ever developed \cite{ic555}, the 555 timer \acs{ic}.
+  During experiments, that model was also discovered able to behave as a self-induced oscillator or toggle switch -- thus ressembling the most successful electronic \ac{ic} ever developed, the 555 timer \acs{ic} \cite{ic555}.
   We believe such multi-functionality may lead to more programmable and reusable components in biological computing and this has led to the reproduction of simulations described in that paper on an open-source implementation of the aforementioned model.
 
 
@@ -28,7 +29,7 @@
   The \ac{qssa} exploited to derive the reduced model is also provided, together with all reaction parameterisation and initial state of each experiment.
   These factors allowed for an easy replication of the model, even without direct reference to source code or any usage of the proprietary tools (MAPLE and MATLAB) originally employed.
 
-  We borrow the network's mathematical description from the original paper to replicate each of the hereby presented simulations.
+  We borrow the network's mathematical description from the original paper to replicate each of the hereby presented experiments.
   Unless otherwise stated, experimental results on the next section have protein concentrations initially set to $R1 = R2 = 50nM$, $R3 = R4 = 0nM$ and reaction parameters are the same as given in the reference work.
   All numerical simulations were performed in Octave 5.1.0 using Euler's method -- this differs from MATLAB's \code{ode45} solver which was chosen by \citet{multif} -- with a fixed step size of $60$ seconds.
   The choice is justified based on the duration of experiments, the shortest of which take at least four days (virtual simulated time) in order to observe a couple of periods on the oscillating output of the frequency divider.
@@ -36,7 +37,7 @@
 
   Every deterministic experiment was carried in two systems: one considering the whole set of \ac{ode}s and another with the \ac{qssa} approximation that is used throughout that study.
   Quantitative results shown refer to the full model and deviations between that and the reduced one are highlighted.
-  While stochastic experiments are only briefly mentioned on the main text, more details can be found inside supporting information documents.
+  While stochastic simulations are only briefly mentioned on the main text, more details can be found inside supporting information documents.
   The \ac{cles} described therein were implemented with Gaussian noise being generated (with a fixed seed) through the use of built-in Octave functions.
 
 
@@ -82,7 +83,7 @@
     Thus, the difference is a consequence of the fact that the original model maintains itself in a dynamic state that never actually reaches equilibrium \cite{ingalls}, as it perpetually oscillates.
 
     As mentioned in the original study, frequency division functionality can only be observed after a specific period threshold.
-    We ran simulations over a range of input frequencies and found the period-doubling bifurcation to be located near values of $0.8 \times 10^5$ seconds ($\sim 22.22$ hours) in both full and reduced models.
+    We ran experiments over a range of input frequencies and found the period-doubling bifurcation to be located near values of $0.8 \times 10^5$ seconds ($\sim 22.22$ hours) in both full and reduced models.
     Although this confirms the network's capability to interface with long-period oscillators, these results (shown in Figure \ref{fig:freqdiv-period}) greatly diverge from those in the reference work, which state this threshold could be observed at input periods of approximately $0.275 \times 10^5$ seconds ($\sim 8$ hours).
 
     \begin{figure}[!htb]
@@ -98,9 +99,9 @@
     \citet{multif} discovered the model's multiple extra functionalities by verifying different behaviours can be attained when input concentration is held constant at specific ranges.
     Experiments regarding the so-called bifurcation analysis were reproduced and Figures \ref{fig:bifurcation-1}-\ref{fig:bifurcation-4} show results under the full model.
 
-    The original study states simulations labeled $4c_{1}$ and $1b$ use the same initial conditions as $4c_{2}$ and $1a$ respectively.
+    The original study states experiments labeled $4c_{1}$ and $1b$ use the same initial conditions as $4c_{2}$ and $1a$ respectively.
     We believe these were typographical errors, as such settings would lead those pairs of experiments to the exact same results under deterministic semantics and this is not the exhibited behaviour.
-    Instead, whereas reaction parameters and input levels are the same as in the original work, initial conditions used are $R1=R2=0nM$ and $R3=R4=50nM$ for simulations $1b$ and $4c_{2}$ and $R1=R2=50nM$ and $R3=R4=0nM$ for all others.
+    Instead, whereas reaction parameters and input levels are the same as in the original work, initial conditions used are $R1=R2=0nM$ and $R3=R4=50nM$ for experiments $1b$ and $4c_{2}$ and $R1=R2=50nM$ and $R3=R4=0nM$ for all others.
 
     \begin{figure}[!htbp]
       \centering
@@ -172,7 +173,7 @@
   \subsection{Toggle Switch}
 
     As revealed during bifurcation analysis, the network exhibits bistability when input concentration is held outside the oscillatory range, that is, at levels lower than \SI{0.4}{\nano M} or greater than \SI{7}{\nano M}.
-    Figures \ref{fig:switch-low} and \ref{fig:switch-high} illustrate simulations with the system being used as a toggle switch which is ``triggered'' by varying binding affinity of particular repressors, altering $k_A$ momentarily from $6 \times 10^{-10} M$ to $4 \times 10^{-6} M$, as described in the reference work.
+    Figures \ref{fig:switch-low} and \ref{fig:switch-high} illustrate the system being used as a toggle switch which is ``triggered'' by varying binding affinity of particular repressors, altering $k_A$ momentarily from $6 \times 10^{-10} M$ to $4 \times 10^{-6} M$, as described in the reference work.
 
     \begin{figure}[!htb]
       \centering
