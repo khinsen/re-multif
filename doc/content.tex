@@ -24,68 +24,70 @@
 \section{Methods}
 
   The multi-functional synthetic gene network and its dynamics are wholly described in the original study.
-  Supplementary material contains the full \ac{ode} system under mass-action kinetics with Hill functions used to represent activation and repression of genetic promoters.
+  Supplementary material contains the complete \ac{ode} system under mass-action kinetics with Hill functions used to represent activation and repression of genetic promoters.
   The \ac{qssa} exploited to derive the reduced model is also provided, together with all reaction parameterisation and initial state of each experiment.
   These factors allowed for an easy replication of the model, even without direct reference to source code or any usage of the proprietary tools (MAPLE and MATLAB) originally employed.
 
   We borrow the network's mathematical description from the original paper to replicate each of the hereby presented simulations.
-  Unless otherwise stated, experimental results on the next section use initial conditions $R1 = R2 = 50nM$, $R3 = R4 = 0nM$ and reaction parameters are the same as given in the reference work.
+  Unless otherwise stated, experimental results on the next section have protein concentrations initially set to $R1 = R2 = 50nM$, $R3 = R4 = 0nM$ and reaction parameters are the same as given in the reference work.
   All numerical simulations were performed in Octave 5.1.0 using Euler's method -- this differs from MATLAB's \code{ode45} solver which was chosen by \citet{multif} -- with a fixed step size of $60$ seconds.
   The choice is justified based on the duration of experiments, the shortest of which take at least four days (virtual simulated time) in order to observe a couple of periods on the oscillating output of the frequency divider.
+  Due to the different integration methods employed, some numerical mismatch is expected, but qualitative behaviour should be the same.
 
-  Every deterministic experiment was carried in two systems: one considering the full set of \ac{ode}s and another with the \ac{qssa} approximation that is used throughout that study.
-  Figures show quantitative results in the complete model, but differences between that and the reduced one are highlighted.
+  Every deterministic experiment was carried in two systems: one considering the whole set of \ac{ode}s and another with the \ac{qssa} approximation that is used throughout that study.
+  Quantitative results shown refer to the full model and deviations between that and the reduced one are highlighted.
   While stochastic experiments are only briefly mentioned on the main text, more details can be found inside supporting information documents.
   The \ac{cles} described therein were implemented with Gaussian noise being generated (with a fixed seed) through the use of built-in Octave functions.
 
 
 \section{Results}
 
-  \subsection{Frequency Divider}
+  \subsection{Frequency Divider}\label{sec:freq-div}
 
-    Although the network is said to be a frequency multiplier, it actually performs frequency division as concentrations of repressor proteins oscillate in one half of the input frequency or, equivalently, with a twice as long period.
-    This behaviour can be observed by feeding the model with a continuously oscillating input -- this would be often the case considering existing genetic oscillators \cite{optoscillator} -- but also works with square waves.
+    The network was originally designed as a frequency divider such that the concentrations of repressor proteins oscillate in approximately one half of the input frequency.
+    This behaviour can be observed by feeding the model with a continuously oscillating input -- this would be often the case considering existing genetic oscillators \cite{optoscillator} -- but also works with square waves (Figure \ref{fig:freqdiv-square}).
 
     \begin{figure}[!htbp]
       \centering
-      \includegraphics[width=0.85\textwidth]{freqdiv-square}
-      \caption{\textbf{Frequency division of clock-like input.} Input signal is a square wave with amplitude of \SI{50}{\nano M}, period of $1.6 \times 10^5$ seconds and $50\%$ duty cycle.}
+      \includegraphics[width=0.9\textwidth]{freqdiv-square}
+      \caption{\textbf{Frequency division of clock-like input.} Input signal (concentration of protein $I$) is a square wave with amplitude of \SI{50}{\nano M}, period of $1.6 \times 10^5$ seconds and $50\%$ duty cycle.}
       \label{fig:freqdiv-square}
     \end{figure}
 
     \begin{figure}[!htbp]
       \centering
-      \includegraphics[width=0.85\textwidth]{freqdiv-full}
-      \caption{\textbf{Frequency division in the full model.} Sinusoidal input has an amplitude of \SI{50}{\nano M}, minimum of \SI{6}{\nano M} and period is $0.9 \times 10^5$ seconds.}
-      \label{fig:freqdiv-full}
-    \end{figure}
-
-    \begin{figure}[!htbp]
-      \centering
-      \includegraphics[width=0.85\textwidth]{freqdiv-qssa}
-      \caption{\textbf{Frequency division in the reduced model.} Input is the same as in Figure \ref{fig:freqdiv-full}.}
-      \label{fig:freqdiv-qssa}
+      \begin{subfigure}[t]{0.9\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{freqdiv-full}
+        \caption{\textbf{Frequency division in the full model.}}
+        \label{fig:freqdiv-full}
+      \end{subfigure}
+      \begin{subfigure}[t]{0.9\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{freqdiv-qssa}
+        \caption{\textbf{Frequency division in the reduced model.}}
+        \label{fig:freqdiv-qssa}
+      \end{subfigure}
+      \caption{\textbf{Comparing frequency division between full and reduced models.} Input varies as a sinusoidal signal with amplitude of \SI{50}{\nano M}, minimum of \SI{6}{\nano M} and a period of $0.9 \times 10^5$ seconds.}
+      \label{fig:freqdiv-sine}
     \end{figure}
 
     With a sinusoidal input, output signals from the \ac{qssa} model have constant amplitude, whereas in the full model the first concentration peak of proteins R2 and R3 are higher than the following ones.
     This suggests \acs{mrna} reactions stabilize quicker in the first $10^5$ seconds and thus the approximation is more accurate at those instants \cite{ingalls}.
+    After that moment, however, the reduced model exhibits a persistent error in relation to the full one.
 
-    After that moment, however, the reduced model exhibits a persistent error in relation to the complete one.
-    This can be observed by comparing concentration levels reached during oscillation peaks in Figures \ref{fig:freqdiv-full} and \ref{fig:freqdiv-qssa}.
-    In those simulations, while R1 and R4 concentrations in the full model reach \textit{maxima} valued at \SI{238.29}{\nano M} and \SI{87.62}{\nano M} respectively, the reduced model goes up to \SI{283.96}{\nano M} and \SI{113.05}{\nano M} for each of these proteins.
-    Peak values of R3 follow R1 closely and the same happens with R2 and R4.
-
+    As illustrated in Figures \ref{fig:freqdiv-full} and \ref{fig:freqdiv-qssa}, while R1 and R4 concentrations in the full model reach \textit{maxima} valued at \SI{238.29}{\nano M} and \SI{87.62}{\nano M} respectively, the reduced model goes up to \SI{283.96}{\nano M} and \SI{113.05}{\nano M} for each of these proteins (peak values of R3 follow R1 closely and the same happens with R2 and R4).
     This offset distinguishing the two models happens because the \ac{qssa} used to derive the reduced \ac{ode} system considers a separation of time-scales between reactions which regulate \acs{mrna} production and those which describe protein translation.
     In the approximation, the former reactions are assumed to reach equilibrium instantaneously relative to the latter.
     Thus, the difference is a consequence of the fact that the original model maintains itself in a dynamic state that never actually reaches equilibrium \cite{ingalls}, as it perpetually oscillates.
 
     As mentioned in the original study, frequency division functionality can only be observed after a specific period threshold.
     We ran simulations over a range of input frequencies and found the period-doubling bifurcation to be located near values of $0.8 \times 10^5$ seconds ($\sim 22.22$ hours) in both full and reduced models.
-    Although this confirms the network's capability to interface with long-period oscillators, these results greatly diverge from those in the reference work, which state this threshold could be observed at input periods of approximately $0.275 \times 10^5$ seconds ($\sim 8$ hours).
+    Although this confirms the network's capability to interface with long-period oscillators, these results (shown in Figure \ref{fig:freqdiv-period}) greatly diverge from those in the reference work, which state this threshold could be observed at input periods of approximately $0.275 \times 10^5$ seconds ($\sim 8$ hours).
 
     \begin{figure}[!htb]
       \centering
-      \includegraphics[width=0.9\textwidth]{freqdiv-period}
+      \includegraphics[width=0.85\textwidth]{freqdiv-period}
       \caption{\textbf{Locating the period-doubling bifurcation.} Output period is detected by measuring the distance between R1 concentration peaks. Other than input frequency and simulation length (each run was configured to take as long as five times the input period), parameters are the same as in Figure \ref{fig:freqdiv-full}.}
       \label{fig:freqdiv-period}
     \end{figure}
@@ -94,7 +96,7 @@
   \subsection{Bifurcation Analysis}
 
     \citet{multif} discovered the model's multiple extra functionalities by verifying different behaviours can be attained when input concentration is held constant at specific ranges.
-    Experiments regarding the so-called bifurcation analysis were reproduced and Figures \ref{fig:bifurcation-1}-\ref{fig:bifurcation-4} show results under the complete model.
+    Experiments regarding the so-called bifurcation analysis were reproduced and Figures \ref{fig:bifurcation-1}-\ref{fig:bifurcation-4} show results under the full model.
 
     The original study states simulations labeled $4c_{1}$ and $1b$ use the same initial conditions as $4c_{2}$ and $1a$ respectively.
     We believe these were typographical errors, as such settings would lead those pairs of experiments to the exact same results under deterministic semantics and this is not the exhibited behaviour.
@@ -102,13 +104,13 @@
 
     \begin{figure}[!htbp]
       \centering
-      \begin{subfigure}[t]{0.85\textwidth}
+      \begin{subfigure}[t]{0.87\textwidth}
         \centering
         \includegraphics[width=\linewidth]{bifurcation-1a}
         \caption{\textbf{Experiment $1a$.}}
         \label{fig:bifurcation-1a}
       \end{subfigure}
-      \begin{subfigure}[t]{0.85\textwidth}
+      \begin{subfigure}[t]{0.87\textwidth}
         \centering
         \includegraphics[width=\linewidth]{bifurcation-1b}
         \caption{\textbf{Experiment $1b$.}}
@@ -118,19 +120,19 @@
       \label{fig:bifurcation-1}
     \end{figure}
 
-    Once again, oscillatory amplitude differs between models in experiment $2$, with R1 and R4 each peaking at \SI{35.60}{\nano M} and \SI{9.16}{\nano M} in the complete system (Figure \ref{fig:bifurcation-2}) while going up to \SI{30.08}{\nano M} and \SI{8.18}{\nano M} in the \ac{qssa} reduction (not shown).
-    Other experiments do not present a significant offset.
+    Oscillatory amplitude differs between models in experiment $2$, with R1 and R4 each peaking at \SI{35.60}{\nano M} and \SI{9.16}{\nano M} in the full model (Figure \ref{fig:bifurcation-2}) while going up to \SI{30.08}{\nano M} and \SI{8.18}{\nano M} in the \ac{qssa} reduction (not shown).
+    This stems from the same cause explained in Section \ref{sec:freq-div}.
 
     \begin{figure}[!htbp]
       \centering
-      \includegraphics[width=0.85\textwidth]{bifurcation-2}
+      \includegraphics[width=0.87\textwidth]{bifurcation-2}
       \caption{\textbf{Experiment $2$.} $I = 5 nM$.}
       \label{fig:bifurcation-2}
     \end{figure}
 
     \begin{figure}[!htbp]
       \centering
-      \includegraphics[width=0.85\textwidth]{bifurcation-3}
+      \includegraphics[width=0.87\textwidth]{bifurcation-3}
       \caption{\textbf{Experiment $3$.} $I = 7.5nM$. Oscillations are gradually damped and cease after about $12 \times 10^5 s$ elapsed time. This behaviour evidentiates a pitchfork bifurcation.}
       \label{fig:bifurcation-3}
     \end{figure}
@@ -170,8 +172,7 @@
   \subsection{Toggle Switch}
 
     As revealed during bifurcation analysis, the network exhibits bistability when input concentration is held outside the oscillatory range, that is, at levels lower than \SI{0.4}{\nano M} or greater than \SI{7}{\nano M}.
-    Figures \ref{fig:switch-low} and \ref{fig:switch-high} illustrate simulations with the system being used as a toggle switch which is ``triggered'' by varying binding affinity of particular repressors as described in the reference work.
-    This set of experiments was readily replicated and no significant difference is found between reduced and full models.
+    Figures \ref{fig:switch-low} and \ref{fig:switch-high} illustrate simulations with the system being used as a toggle switch which is ``triggered'' by varying binding affinity of particular repressors, altering $k_A$ momentarily from $6 \times 10^{-10} M$ to $4 \times 10^{-6} M$, as described in the reference work.
 
     \begin{figure}[!htb]
       \centering
@@ -192,7 +193,7 @@
 
     We implemented the \ac{cles} shown in the related supporting information document provided by \citet{multif}, but it was not possible to verify similar results without modifications to the noise-inducing function.
     While original authors state the usage of Gaussian noise with zero mean and variance of 1, simply employing Octave's \code{randn} function -- which provides such a distribution \cite{randn} -- proved being too noisy as stochastic fluctuations began dominating the model's behaviour.
-    It was found through trial and error that downscaling random numbers by a factor of $s \in [\frac{1}{100}, \frac{1}{10}]$ (and consequently scaling variance by $s^2$) would bring results closer to what is seen in the reference work.
+    It was found through trial and error that downscaling random numbers by a factor of $s \in [\frac{1}{100}, \frac{1}{10}]$ (and consequently scaling variance by $s^2$) would allow for results more similar to those in the reference work.
 
     \begin{figure}[!htb]
       \centering
@@ -228,9 +229,9 @@
 
   All operation configurations in the multi-functional synthetic gene network were verified and to a large degree the results presented in \cite{multif} were replicated.
   It should be emphasised that the original work stands as an example of reproducible science, with detailed descriptions of model derivation, parameter decisions and extra experiments inside openly available supplementary material.
-  Simplifications made using the \ac{qssa} to reduce the full \ac{ode} system proved being a good approximation as even though some small quantitative differences were observed, there was no impact on the network's overall dynamics.
+  Simplifications made using the \ac{qssa} to reduce the full \ac{ode} system proved being a good approximation as even though some small quantitative differences were observed -- and those could be due to the different integration methods as well -- there was no impact on the network's overall dynamics.
 
-  However, stochastic simulations would not provide the expected results without a significant reduction to noise variance.
+  However, stochastic simulations would not provide the expected results without an expressive reduction to noise variance.
   In fact, Gaussian noise seems capable of undermining frequency division functionality to some degree.
   Additionally, the period-doubling bifurcation was empirically found to be at a much lower frequency than what is stated in the reference study.
   Upon correspondence with the authors, it was speculated that some parameter mismatch could have caused this displacement, as qualitative behaviour was mostly maintained.
@@ -238,4 +239,4 @@
   We highlight the idea that as synthetic networks grow in complexity and size, multi-functionality may arise more frequently and become difficult to avoid.
   While this can bring the benefits of reusable programmable components, it might also end up becoming a nuisance if models start behaving unexpectedly under the influence of certain inputs.
   At last, we believe further works should focus on a deeper exploration of parameter space.
-  The motivation for this is double: it may allow for the characterisation of \textit{in vivo} implementation designs with reusable biological parts and will potentially verify the full set of specifications for this programmable genetic component and its multiple operating modes.
+  The motivation for this is double: it may allow for the characterisation of \textit{in vivo} implementation designs with reusable biological parts and will potentially verify the complete set of specifications for this programmable genetic component and its multiple operating modes.
