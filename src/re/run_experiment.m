@@ -21,6 +21,8 @@ Hr = @(X) hill_repression(X, N, k_r);
 if strcmp(input_type, "square")
   I = @(t) square_wave(t, input_period, input_amplitude, ...
                        input_dc_level, input_duty_cycle);
+elseif strcmp(input_type, "sine")
+  I = @(t) input_amplitude*(-cos(t * 2*pi/input_period) + 1)/2 + input_dc_level;
 else
   error("Undefined input type: %s.", input_type)
 endif
@@ -63,15 +65,17 @@ if plot_include_input_signal
   plot(t, Is, 'b;I;');
   axis([-Inf, +Inf, 0, input_amplitude * 1.23 / molscale]);
   pbaspect([1 0.334 1]);
+  legend('location', 'east');
   xlabel("Time (10^5 seconds)");
   ylabel("Concentration (nM)");
 
-  subplot(2, 1, 1); % subplot() may or may not be needed for the model plot
+  subplot(2, 1, 1); % may or may not be needed for the model plot
 endif
 
 % plot model behaviour
 plot(t,R1s,'--m;R1;', t,R2s,':k;R2;', t,R3s,'-r;R3;', t,R4s,'-.g;R4;');
 pbaspect([1 0.334 1]);
+legend('location', 'east');
 xlabel("Time (10^5 seconds)");
 ylabel("Concentration (nM)");
 

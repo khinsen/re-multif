@@ -1,9 +1,6 @@
 #!/usr/bin/octave -qf
 % usage: octave save_parameters.m
 
-clear;
-format long;
-
 
 % initial concentrations of repressor proteins
 R1 = 50e-9; % (M)
@@ -12,22 +9,22 @@ R3 = 0e-9; % (M)
 R4 = 0e-9; % (M)
 
 % input signal configuration
-input_type = "square"; % "square" |
-input_dc_level = 0e-9; % (M)
-input_period = 1.6e5; % (s)
+input_type = "sine"; % "square" | "sine"
+input_dc_level = 6e-9; % (M)
+input_period = 0.9e5; % (s)
 input_amplitude = 50e-9; % (M)
 input_duty_cycle = 0.5; % (normalized %)
 
 % simulation time controls
-simulation_total_time = 7.0e5; %(s)
+simulation_total_time = 4.0e5; %(s)
 simulation_step = 60; %(s)
 
 % underlying model type
 model = "QSSA"; % "QSSA" |
 
 % plot configuration
-plot_output_filename = "plot.pdf"; % "filename.extension"
-plot_include_input_signal = true; % (bool)
+plot_output_filename = "freqdiv-qssa.pdf"; % "filename.extension"
+plot_include_input_signal = false; % (bool)
 
 % network parameters (follows the nomenclature in the original paper)
 k_tl = 6e-4; % Translation rate (1/s)
