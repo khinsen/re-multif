@@ -29,19 +29,23 @@ else
 endif
 
 % define short-hand for Hill functions
-Ha = @(X) hill_activation(X, N, k_a);
-Hr = @(X) hill_repression(X, N, k_r);
+k_a = [k_a k_a k_a k_a k_a];
+k_r = [k_r k_r k_r k_r];
+Ha = @(X, k) hill_activation(X, N, k);
+Hr = @(X, k) hill_repression(X, N, k);
 
-% choose the network's internal model (input I left unfixed)
+% choose the network's internal model (input I and constant k_r left unfixed)
 if strcmp(model, "QSSA")
   alpha = k_tl * beta / delta_m;
   gamma = k_tl * P_tc / delta_m;
-  model = @(R, t, I) qssa(R, t, I, ...
-                          Ha, Hr, alpha, gamma, delta_x);
+  model = @(R, t, I, k_r) qssa(R, t, I, ...
+                               Ha, Hr, k_a, k_r, ...
+                               alpha, gamma, delta_x);
 elseif strcmp(model, "Full")
   R = [R [0 0 0 0 0 0 0 0]]; % insert starting mRNAs into molecule vector
-  model = @(R, t, I) full_ode(R, t, I, ...
-                              Ha, Hr, k_tl, beta, P_tc, delta_x, delta_m);
+  model = @(R, t, I, k_r) full_ode(R, t, I, ...
+                                   Ha, Hr, k_a, k_r, ...
+                                   k_tl, beta, P_tc, delta_x, delta_m);
 else
   error("Undefined model type: %s.", model);
 endif
@@ -55,10 +59,10 @@ molscale = 1e-9; % nM
 if strcmp(experiment_class, "single")
   % fix period and model
   I = @(t) I(t, input_period);
-  model = @(R, t) model(R, t, I);
+  model = @(R, t) model(R, t, I, k_r);
 
   % run single simulatin
-  step_number = floor(simulation_total_time / simulation_step) + 1;
+  step_number = ceil(simulation_total_time / simulation_step);
   Rs = euler_simulate(model, R, step_number, simulation_step);
 
   % get time, protein and input concentration series
@@ -101,11 +105,11 @@ elseif strcmp(experiment_class, "period")
   for input_period = T_range(1) : T_range(2) : T_range(3)
     % fix this iteration's input and model
     temp_I = @(t) I(t, input_period);
-    temp_model = @(R, t) model(R, t, temp_I);
+    temp_model = @(R, t) model(R, t, temp_I, k_r);
 
     % actual simulation
     simulation_total_time = 5 * input_period;
-    step_number = floor(simulation_total_time / simulation_step) + 1;
+    step_number = ceil(simulation_total_time / simulation_step);
     Rs = euler_simulate(temp_model, R, step_number, simulation_step);
 
     % detecting output period by via [R1] peaks
@@ -137,10 +141,10 @@ elseif strcmp(experiment_class, "oscillator")
   for input_dc_level = DC_range
     % fix this iteration's input and model
     temp_I = @(t) input_dc_level;
-    temp_model = @(R, t) model(R, t, temp_I);
+    temp_model = @(R, t) model(R, t, temp_I, k_r);
 
     % actual simulation
-    step_number = floor(simulation_total_time / simulation_step) + 1;
+    step_number = ceil(simulation_total_time / simulation_step);
     Rs = euler_simulate(temp_model, R, step_number, simulation_step);
 
     % detecting output period by via [R1] peaks
@@ -161,6 +165,47 @@ elseif strcmp(experiment_class, "oscillator")
   plot(DC_range, output_periods, 'b');
   xlabel("Input concentration (nM)");
   ylabel("Period (10^5 seconds)");
+
+elseif strcmp(experiment_class, "switch")
+  % calculate trigger boundaries
+  step_number = ceil(simulation_total_time / simulation_step);
+  trigger_start = round(switch_trigger_time(1) / simulation_step);
+  trigger_stop = round(switch_trigger_time(2) / simulation_step);
+  prelude_steps = trigger_start;
+  interlude_steps = trigger_stop - trigger_start;
+  postlude_steps = step_number - (prelude_steps + interlude_steps);
+
+  % fix input and models
+  I = @(t) I(t, input_period);
+  normal_model = @(R, t) model(R, t, I, k_r);
+  triggered_model = @(R, t) model(R, t, I, k_r + switch_R*switch_trigger_delta);
+
+  % 3-step simulation with different binding affinity
+  prelude = euler_simulate(normal_model, R, prelude_steps, simulation_step);
+
+  interlude = euler_simulate(triggered_model, prelude(end,:), ...
+                             interlude_steps, simulation_step);
+
+  postlude = euler_simulate(normal_model, interlude(end,:), ...
+                            postlude_steps, simulation_step);
+
+  Rs = [prelude; interlude; postlude];
+
+  % get time, protein and input concentration series
+  t = (0 : simulation_step : simulation_total_time)' / timescale;
+  R1s = Rs(:,1) / molscale;
+  R2s = Rs(:,2) / molscale;
+  R3s = Rs(:,3) / molscale;
+  R4s = Rs(:,4) / molscale;
+  Is = zeros(size(t));
+  for i = 1 : length(t)
+    Is(i) = I(i * simulation_step) / molscale;
+  endfor
+
+  % plot model behaviour
+  plot(t,R1s,'--m;R1;', t,R2s,':k;R2;', t,R3s,'-r;R3;', t,R4s,'-.g;R4;');
+  xlabel("Time (10^5 seconds)");
+  ylabel("Concentration (nM)");
 
 else
   error("Undefined experiment type: %s.", experiment_class);
