@@ -1,38 +1,43 @@
 #!/usr/bin/octave -qf
+% usage: octave run_experiments.m network.mat experiment.mat
 
-% usage: octave run_experiments.m path/to/parameters.mat
 clear;
 format long;
 
 pkg load signal; % for findpeaks
 
 
-% load model parameters
-parameter_file = argv(){1};
-load(parameter_file);
+% parameterize experiment
+params = argv();
+load(params{1}); % network reaction constants
+load(params{2}); % experiment configuration
 
 % set initial protein concentrations
 R = [R1 R2 R3 R4];
+
+% choose input signal shape (period T left unfixed)
+if strcmp(input_type, "sine")
+  I = @(t, T) input_amplitude * (-cos(t * 2*pi/T) + 1) / 2 + input_dc_level;
+elseif strcmp(input_type, "square")
+  I = @(t, T) square_wave(t, T, ...
+                          input_amplitude, input_dc_level, input_duty_cycle);
+elseif strcmp(input_type, "constant")
+  I = @(t, T) input_dc_level;
+  input_period = Inf;
+else
+  error("Undefined input type: %s.", input_type);
+endif
 
 % define short-hand for Hill functions
 Ha = @(X) hill_activation(X, N, k_a);
 Hr = @(X) hill_repression(X, N, k_r);
 
-% choose input signal shape (unfixed period)
-if strcmp(input_type, "square")
-  I = @(t, T) square_wave(t, T, ...
-                          input_amplitude, input_dc_level, input_duty_cycle);
-elseif strcmp(input_type, "sine")
-  I = @(t, T) input_amplitude*(-cos(t * 2*pi/T) + 1)/2 + input_dc_level;
-else
-  error("Undefined input type: %s.", input_type);
-endif
-
-% choose the network's internal model (unfixed input)
+% choose the network's internal model (input I left unfixed)
 if strcmp(model, "QSSA")
   alpha = k_tl * beta / delta_m;
   gamma = k_tl * P_tc / delta_m;
-  model = @(R, t, I) qssa(R, t, I, Ha, Hr, alpha, gamma, delta_x);
+  model = @(R, t, I) qssa(R, t, I, ...
+                          Ha, Hr, alpha, gamma, delta_x);
 elseif strcmp(model, "Full")
   R = [R [0 0 0 0 0 0 0 0]]; % insert starting mRNAs into molecule vector
   model = @(R, t, I) full_ode(R, t, I, ...
@@ -47,12 +52,12 @@ timescale = 1e5; % 10^5 seconds
 molscale = 1e-9; % nM
 
 % run the simulation defined by the current experiment's class
-if strcmp(experiment_class, "freqdiv")
+if strcmp(experiment_class, "single")
   % fix period and model
   I = @(t) I(t, input_period);
   model = @(R, t) model(R, t, I);
 
-  % run simulatin
+  % run single simulatin
   step_number = floor(simulation_total_time / simulation_step) + 1;
   Rs = euler_simulate(model, R, step_number, simulation_step);
 
@@ -71,7 +76,7 @@ if strcmp(experiment_class, "freqdiv")
   if plot_include_input_signal
     subplot(2, 1, 2);
     plot(t, Is, 'b;I;');
-    axis([-Inf, +Inf, 0, input_amplitude * 1.23 / molscale]);
+    axis([-Inf,+Inf, 0,input_amplitude * 1.23 / molscale]);
     pbaspect([1 0.334 1]);
     legend('location', 'east');
     xlabel("Time (10^5 seconds)");
@@ -81,6 +86,7 @@ if strcmp(experiment_class, "freqdiv")
 
   % plot model behaviour
   plot(t,R1s,'--m;R1;', t,R2s,':k;R2;', t,R3s,'-r;R3;', t,R4s,'-.g;R4;');
+  axis([min(t), max(t)]);
   pbaspect([1 0.334 1]);
   legend('location', 'east');
   xlabel("Time (10^5 seconds)");
@@ -111,8 +117,8 @@ elseif strcmp(experiment_class, "period")
     endif
 
     % store frequency response
-    input_periods = [input_periods, input_period];
-    output_periods = [output_periods, out_period];
+    input_periods =  [input_periods  input_period];
+    output_periods = [output_periods out_period];
   endfor
 
   % plot frequency response
@@ -121,6 +127,40 @@ elseif strcmp(experiment_class, "period")
   plot(input_periods, output_periods, '@b');
   xlabel("Input period (10^5 seconds)");
   ylabel("Output period (10^5 seconds)");
+
+elseif strcmp(experiment_class, "oscillator")
+  % frequency response vectors
+  DC_range = oscillator_input_range;
+  DC_range = DC_range(1) : DC_range(2) : DC_range(3);
+  output_periods = [];
+
+  for input_dc_level = DC_range
+    % fix this iteration's input and model
+    temp_I = @(t) input_dc_level;
+    temp_model = @(R, t) model(R, t, temp_I);
+
+    % actual simulation
+    step_number = floor(simulation_total_time / simulation_step) + 1;
+    Rs = euler_simulate(temp_model, R, step_number, simulation_step);
+
+    % detecting output period by via [R1] peaks
+    [pks, idx] = findpeaks(Rs(:,1));
+    if length(pks) < 2
+      out_period = 0;
+    else
+      out_period = (idx(end) - idx(end-1)) * simulation_step; % last oscillation
+    endif
+
+    % store frequency response
+    output_periods = [output_periods out_period];
+  endfor
+
+  % plot oscillatory behaviour
+  DC_range /= molscale;
+  output_periods /= timescale;
+  plot(DC_range, output_periods, 'b');
+  xlabel("Input concentration (nM)");
+  ylabel("Period (10^5 seconds)");
 
 else
   error("Undefined experiment type: %s.", experiment_class);

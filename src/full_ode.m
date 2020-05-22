@@ -16,7 +16,7 @@ function dR = full_ode(R, t, I, Ha, Hr, k_tl, beta, P_tc, delta_x, delta_m)
   R4P6 = 8;
 
   m = R(5:end); % mRNAs
-  R = R(1:4); % proteins
+  R = R(1:4);   % proteins
 
   dR = zeros(size(R));
   dm = zeros(size(m));
