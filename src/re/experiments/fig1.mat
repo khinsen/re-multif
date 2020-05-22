@@ -1,3 +1,17 @@
+# name: experiment_class
+# type: string
+# elements: 1
+# length: 7
+freqdiv
+
+
+# name: period_experiment_range
+# type: matrix
+# rows: 1
+# columns: 3
+ 2e4 0.5e4 16e4
+
+
 # name: R1
 # type: scalar
 50e-9

@@ -54,6 +54,11 @@ sine
 50e-9
 
 
+# name: input_duty_cycle
+# type: scalar
+0.5
+
+
 # name: simulation_total_time
 # type: scalar
 4.0e5
@@ -68,14 +73,14 @@ sine
 # type: string
 # elements: 1
 # length: 4
-QSSA
+Full
 
 
 # name: plot_output_filename
 # type: string
 # elements: 1
 # length: 16
-freqdiv-qssa.pdf
+freqdiv-full.pdf
 
 
 # name: plot_include_input_signal
