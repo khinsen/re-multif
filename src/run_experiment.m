@@ -1,27 +1,27 @@
 #!/usr/bin/octave -qf
-% usage: octave run_experiments.m network.mat experiment.mat
+% usage: octave run_experiments.m path/to/network.mat path/to/experiment.mat
 
 clear;
 format long;
 
-pkg load signal; % for findpeaks
-
+pkg load signal; % findpeaks
 
 % parameterize experiment
 params = argv();
 load(params{1}); % network reaction constants
 load(params{2}); % experiment configuration
 
+
 % set initial protein concentrations
 R = [R1 R2 R3 R4];
 
 % choose input signal shape (period T left unfixed)
-if strcmp(input_type, "sine")
+if strcmp(input_type, 'sine')
   I = @(t, T) input_amplitude * (-cos(t * 2*pi/T) + 1) / 2 + input_dc_level;
-elseif strcmp(input_type, "square")
+elseif strcmp(input_type, 'square')
   I = @(t, T) square_wave(t, T, ...
                           input_amplitude, input_dc_level, input_duty_cycle);
-elseif strcmp(input_type, "constant")
+elseif strcmp(input_type, 'constant')
   I = @(t, T) input_dc_level;
   input_period = Inf;
 else
@@ -34,29 +34,49 @@ k_r = [k_r k_r k_r k_r];
 Ha = @(X, k) hill_activation(X, N, k);
 Hr = @(X, k) hill_repression(X, N, k);
 
+% defaults to zero noise, this is overrided when using stochastic model
+noise = @(t, len) 0;
+
 % choose the network's internal model (input I and constant k_r left unfixed)
-if strcmp(model, "QSSA")
+if strcmp(model, 'QSSA')
   alpha = k_tl * beta / delta_m;
   gamma = k_tl * P_tc / delta_m;
   model = @(R, t, I, k_r) qssa(R, t, I, ...
                                Ha, Hr, k_a, k_r, ...
                                alpha, gamma, delta_x);
-elseif strcmp(model, "Full")
+elseif strcmp(model, 'Full')
   R = [R [0 0 0 0 0 0 0 0]]; % insert starting mRNAs into molecule vector
   model = @(R, t, I, k_r) full_ode(R, t, I, ...
                                    Ha, Hr, k_a, k_r, ...
                                    k_tl, beta, P_tc, delta_x, delta_m);
+elseif strcmp(model, 'Stochastic')
+  assert(strcmp(experiment_class, 'single') || strcmp(experiment_class, 'switch'));
+
+  % pre-generate Gaussian noise
+  randn('seed', random_seed);
+  steps = ceil(simulation_total_time / simulation_step);
+  noise = zeros(steps, 12);
+  for j = 1 : size(noise, 2)
+    noise(:,j) = randn(steps, 1) * noise_scaling;
+  endfor
+  noise_fn = @(t, col) noise(round(t / simulation_step) + 1, col);
+
+  % set model constructor
+  model = @(R, t, I, k_r) stochastic(R, t, I, noise_fn, ...
+                                     Ha, Hr, k_a, k_r, ...
+                                     k_tl, beta, P_tc, delta_x, delta_m);
 else
   error("Undefined model type: %s.", model);
 endif
-
 
 % data scaling for easier visualization
 timescale = 1e5; % 10^5 seconds
 molscale = 1e-9; % nM
 
+
 % run the simulation defined by the current experiment's class
-if strcmp(experiment_class, "single")
+% @TODO: there's code repetition among experiment classes, could be DRY'ed up
+if strcmp(experiment_class, 'single')
   % fix period and model
   I = @(t) I(t, input_period);
   model = @(R, t) model(R, t, I, k_r);
@@ -96,7 +116,7 @@ if strcmp(experiment_class, "single")
   xlabel("Time (10^5 seconds)");
   ylabel("Concentration (nM)");
 
-elseif strcmp(experiment_class, "period")
+elseif strcmp(experiment_class, 'period')
   % frequency response vectors
   input_periods = [];
   output_periods = [];
@@ -112,7 +132,7 @@ elseif strcmp(experiment_class, "period")
     step_number = ceil(simulation_total_time / simulation_step);
     Rs = euler_simulate(temp_model, R, step_number, simulation_step);
 
-    % detecting output period by via [R1] peaks
+    % detecting output period through [R1] peaks
     [pks, idx] = findpeaks(Rs(:,1));
     if length(pks) < 2
       out_period = 0;
@@ -132,7 +152,7 @@ elseif strcmp(experiment_class, "period")
   xlabel("Input period (10^5 seconds)");
   ylabel("Output period (10^5 seconds)");
 
-elseif strcmp(experiment_class, "oscillator")
+elseif strcmp(experiment_class, 'oscillator')
   % frequency response vectors
   DC_range = oscillator_input_range;
   DC_range = DC_range(1) : DC_range(2) : DC_range(3);
@@ -147,7 +167,7 @@ elseif strcmp(experiment_class, "oscillator")
     step_number = ceil(simulation_total_time / simulation_step);
     Rs = euler_simulate(temp_model, R, step_number, simulation_step);
 
-    % detecting output period by via [R1] peaks
+    % detecting output period through [R1] peaks
     [pks, idx] = findpeaks(Rs(:,1));
     if length(pks) < 2
       out_period = 0;
@@ -166,7 +186,7 @@ elseif strcmp(experiment_class, "oscillator")
   xlabel("Input concentration (nM)");
   ylabel("Period (10^5 seconds)");
 
-elseif strcmp(experiment_class, "switch")
+elseif strcmp(experiment_class, 'switch')
   % calculate trigger boundaries
   step_number = ceil(simulation_total_time / simulation_step);
   trigger_start = round(switch_trigger_time(1) / simulation_step);
@@ -180,7 +200,7 @@ elseif strcmp(experiment_class, "switch")
   normal_model = @(R, t) model(R, t, I, k_r);
   triggered_model = @(R, t) model(R, t, I, k_r + switch_R*switch_trigger_delta);
 
-  % 3-step simulation with different binding affinity
+  % 3-step simulation with different binding affinities
   prelude = euler_simulate(normal_model, R, prelude_steps, simulation_step);
 
   interlude = euler_simulate(triggered_model, prelude(end,:), ...
@@ -210,6 +230,7 @@ elseif strcmp(experiment_class, "switch")
 else
   error("Undefined experiment type: %s.", experiment_class);
 endif
+
 
 % save plotted figure (gets put in the same folder the script runs from)
 print(plot_output_filename);

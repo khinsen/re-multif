@@ -1,9 +1,10 @@
 % Calculates the protein concentrations gradient of the network (using the QSSA
 % model) for given repressor concentrations R at instant t. I(t) should evaluate
-% to the input signal at time t; Ha(X) and Hr(X) must compute the Hill functions
-% for activation and repression of protein X; and alpha, gamma and delta are
-% reaction constants extracted from the network. k_a and k_r are vectors with
-% the binding affinity for each repressor protein + input.
+% to the input signal at time t; Ha(X,k) and Hr(X,k) must compute the Hill
+% functions for activation and repression of protein X given half-saturation
+% constant k; and alpha, gamma and delta are reaction constants extracted from
+% the network. k_a and k_r are vectors with the binding affinity for each
+% repressor protein + input.
 function dR = qssa(R, t, I, Ha, Hr, k_a, k_r, alpha, gamma, delta)
 
   dR = zeros(size(R));
