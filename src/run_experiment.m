@@ -1,15 +1,18 @@
 #!/usr/bin/octave -qf
-% usage: octave run_experiments.m path/to/network.mat path/to/experiment.mat
+% usage: octave script.m path/to/network.mat path/to/experiment.mat [load/path]
 
 clear;
 format long;
 
-pkg load signal; % findpeaks
+pkg load signal; % only used for findpeaks()
 
 % parameterize experiment
 params = argv();
 load(params{1}); % network reaction constants
 load(params{2}); % experiment configuration
+if length(params) > 2
+  addpath(params{3}); % this is mandatory when using the python driver script
+endif
 
 
 % set initial protein concentrations
