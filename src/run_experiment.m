@@ -89,13 +89,15 @@ if strcmp(experiment_class, 'single')
   Rs = euler_simulate(model, R, step_number, simulation_step);
 
   % get time, protein and input concentration series
-  t = (0 : simulation_step : simulation_total_time)' / timescale;
   R1s = Rs(:,1) / molscale;
   R2s = Rs(:,2) / molscale;
   R3s = Rs(:,3) / molscale;
   R4s = Rs(:,4) / molscale;
-  Is = zeros(size(t));
-  for i = 1 : length(t)
+  n = length(R1s);
+  t = (0 : simulation_step : simulation_total_time)' / timescale;
+  t = t(1:n);
+  Is = zeros(n, 1);
+  for i = 1 : n
     Is(i) = I(i * simulation_step) / molscale;
   endfor
 
@@ -215,13 +217,15 @@ elseif strcmp(experiment_class, 'switch')
   Rs = [prelude; interlude; postlude];
 
   % get time, protein and input concentration series
-  t = (0 : simulation_step : simulation_total_time)' / timescale;
   R1s = Rs(:,1) / molscale;
   R2s = Rs(:,2) / molscale;
   R3s = Rs(:,3) / molscale;
   R4s = Rs(:,4) / molscale;
-  Is = zeros(size(t));
-  for i = 1 : length(t)
+  n = length(R1s);
+  t = (0 : simulation_step : simulation_total_time)' / timescale;
+  t = t(1:n);
+  Is = zeros(n, 1);
+  for i = 1 : n
     Is(i) = I(i * simulation_step) / molscale;
   endfor
 

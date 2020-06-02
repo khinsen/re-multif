@@ -16,7 +16,7 @@ period_experiment_range = [2e4, 0.5e4, 16e4]; % min : step : max
 oscillator_input_range = [0.4e-9, 0.1e-9, 7e-9]; % min : step : max
 
 % only used in 'switch' experiments
-switch_trigger_delta = +399941e-10; % k_r
+switch_trigger_delta = +39994e-10; % k_r
 switch_trigger_time = [1.50e5 1.55e5]; % (s) start, stop
 switch_R = [1 1 0 0]; % affects R1? R2? R3? R4?
 

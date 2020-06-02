@@ -5,6 +5,9 @@
   \citet{multif} have proposed a network capable of multiple functions, allowing for the selection of three different behaviours in a programmable fashion.
   This work provides an open-source reference implementation with which their \textit{in silico} experiments were replicated.
 
+  % @TODO: link figures explicitly
+  % Since figures are slightly out of order please provide a reference (or more explicitly label) which figures map to to which in the original implementation.
+
 
 \section{Introduction}
 
@@ -23,6 +26,11 @@
 
 
 \section{Methods}
+
+  % @TODO: include original model
+  % Overall I found the paper well organized and easy to read. My only large comment is that to get model equations I have to refer to the original manuscript. These should be included in the replicated manuscript.
+  % > Regarding the article, do you suggest we include the model's full ODE system, the QSSA approximation equations, or both?
+  % >> My inclination would be to include both, however since the full system is quite large if there is not a good way to present the whole system and the QSSA approximation then I would suggest including the approximation and a description (in text) of the full model.
 
   The multi-functional synthetic gene network and its dynamics are wholly described in the original study.
   Supplementary material contains the complete \ac{ode} system under mass-action kinetics with Hill functions used to represent activation and repression of genetic promoters.
@@ -55,6 +63,10 @@
       \label{fig:freqdiv-square}
     \end{figure}
 
+    With a sinusoidal input, output signals from the \ac{qssa} model have constant amplitude, whereas in the full model the first concentration peak of proteins R2 and R3 are higher than the following ones.
+    This suggests \acs{mrna} reactions stabilize quicker in the first $10^5$ seconds and thus the approximation is more accurate at those instants \cite{ingalls}.
+    After that moment, however, the reduced model exhibits a persistent error in relation to the full one.
+
     \begin{figure}[!htbp]
       \centering
       \begin{subfigure}[t]{0.9\textwidth}
@@ -72,10 +84,6 @@
       \caption{\textbf{Comparing frequency division between full and reduced models.} Input varies as a sinusoidal signal with amplitude of \SI{50}{\nano M}, minimum of \SI{6}{\nano M} and a period of $0.9 \times 10^5$ seconds.}
       \label{fig:freqdiv-sine}
     \end{figure}
-
-    With a sinusoidal input, output signals from the \ac{qssa} model have constant amplitude, whereas in the full model the first concentration peak of proteins R2 and R3 are higher than the following ones.
-    This suggests \acs{mrna} reactions stabilize quicker in the first $10^5$ seconds and thus the approximation is more accurate at those instants \cite{ingalls}.
-    After that moment, however, the reduced model exhibits a persistent error in relation to the full one.
 
     As illustrated in Figures \ref{fig:freqdiv-full} and \ref{fig:freqdiv-qssa}, while R1 and R4 concentrations in the full model reach \textit{maxima} valued at \SI{238.29}{\nano M} and \SI{87.62}{\nano M} respectively, the reduced model goes up to \SI{283.96}{\nano M} and \SI{113.05}{\nano M} for each of these proteins (peak values of R3 follow R1 closely and the same happens with R2 and R4).
     This offset distinguishing the two models happens because the \ac{qssa} used to derive the reduced \ac{ode} system considers a separation of time-scales between reactions which regulate \acs{mrna} production and those which describe protein translation.
@@ -121,9 +129,6 @@
       \label{fig:bifurcation-1}
     \end{figure}
 
-    Oscillatory amplitude differs between models in experiment $2$, with R1 and R4 each peaking at \SI{35.60}{\nano M} and \SI{9.16}{\nano M} in the full model (Figure \ref{fig:bifurcation-2}) while going up to \SI{30.08}{\nano M} and \SI{8.18}{\nano M} in the \ac{qssa} reduction (not shown).
-    This stems from the same cause explained in Section \ref{sec:freq-div}.
-
     \begin{figure}[!htbp]
       \centering
       \includegraphics[width=0.87\textwidth]{bifurcation-2}
@@ -131,11 +136,10 @@
       \label{fig:bifurcation-2}
     \end{figure}
 
-    % @TODO: no need to say `when` oscillations cease if they are shown
     \begin{figure}[!htbp]
       \centering
       \includegraphics[width=0.87\textwidth]{bifurcation-3}
-      \caption{\textbf{Experiment $3$.} $I = 7.5nM$. Oscillations are gradually damped and cease after about $12 \times 10^5 s$ elapsed time. This behaviour evidentiates a pitchfork bifurcation.}
+      \caption{\textbf{Experiment $3$.} $I = 7.5nM$.}
       \label{fig:bifurcation-3}
     \end{figure}
 
@@ -174,26 +178,49 @@
   \subsection{Toggle Switch}
 
     As revealed during bifurcation analysis, the network exhibits bistability when input concentration is held outside the oscillatory range, that is, at levels lower than \SI{0.4}{\nano M} or greater than \SI{7}{\nano M}.
-    Figures \ref{fig:switch-low} and \ref{fig:switch-high} illustrate the system being used as a toggle switch which is ``triggered'' by varying binding affinity of particular repressors, altering $k_A$ momentarily from $6 \times 10^{-10} M$ to $4 \times 10^{-6} M$, as described in the reference work.
+    Figure \ref{fig:switch} illustrates the system being used as a toggle switch which is ``triggered'' by varying binding affinity of particular repressors, altering $k_A$ momentarily from $6 \times 10^{-10} M$ to $4 \times 10^{-6} M$, as described in the reference work.
 
-    % @TODO: mention how the toggle switch works even from non-initial states (not shown in figures)
-
-    \begin{figure}[!htb]
-      \centering
-      \includegraphics[width=0.81\textwidth]{switch-low}
-      \caption{Switching active state from R1 \& R2 to R3 \& R4 and back at $I = 0.1 nM$.}
-      \label{fig:switch-low}
-    \end{figure}
+    It is important to note that this behaviour can be observed even when the simulated system does not start from a "clean" (i.e. unused) state.
+    This means the switch can be toggled on and off repeatedly (not shown), which is to be expected in any non-trivial synthetic biology application \cite{reconfgate}.
 
     \begin{figure}[!htb]
       \centering
-      \includegraphics[width=0.81\textwidth]{switch-high}
-      \caption{Switching between R2 \& R3 and R1 \& R4 at $I = 50 nM$.}
-      \label{fig:switch-high}
+      \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{switch-A}
+        \caption{Switching from R1 \& R2 to R3 \& R4 at $I = 0.1 nM$.}
+        \label{fig:switch-A}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{switch-B}
+        \caption{Switching from R3 \& R4 to R1 \& R2 at $I = 0.1 nM$.}
+        \label{fig:switch-B}
+      \end{subfigure}
+      \medskip
+      \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{switch-C}
+        \caption{Switching from R2 \& R3 to R1 \& R4 at $I = 50 nM$.}
+        \label{fig:switch-C}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{switch-D}
+        \caption{Switching from R1 \& R4 to R2 \& R3 at $I = 50 nM$.}
+        \label{fig:switch-D}
+      \end{subfigure}
+      \caption{\textbf{Demonstrating toggle-switch function.} Binding affinity $k_A$ is altered simultaneously for R1 and R2 in \ref{fig:switch-A} and \ref{fig:switch-C}, while in \ref{fig:switch-B} and \ref{fig:switch-D} the switch is performed by increasing the $k_A$ for R3 and R4. This variation is held between times $1.50 \times 10^5$ and $1.55 \times 10^5$ seconds.}
+      \label{fig:switch}
     \end{figure}
 
 
   \subsection{Stochastic Simulations}
+
+    % @TODO: Euler-Maruyama algorithm
+    % n.b. For stochastic simulations FE in inappropriate due to noise scaling. See Euler-Maruyama alogrithm for a stochastic adaptation. This could be in part the challenge with your noise scaling in the stochastic replication. The authors do not mention how they performed this in their supplemental. However if they did use ode45 the adaptive tolerances will bias noise towards a lower amplitude.
 
     We implemented the \ac{cles} shown in the related supporting information document provided by \citet{multif}, but it was not possible to verify similar results without modifications to the noise-inducing function.
     While original authors state the usage of Gaussian noise with zero mean and variance of 1, simply employing Octave's \code{randn} function -- which provides such a distribution \cite{randn} -- proved being too noisy as stochastic fluctuations began dominating the model's behaviour.
@@ -201,16 +228,15 @@
 
     \begin{figure}[!htb]
       \centering
-      \includegraphics[width=0.73\textwidth]{stochastic-switch}
+      \includegraphics[width=0.73\textwidth,height=0.365\textwidth]{stochastic-switch}
       \caption{\textbf{Effect of noise on switching function.} Random seed is set to $73544911520192$ and fluctuations are scaled by $\frac{1}{55}$ for a fixed input of \SI{50}{\nano M}.}
       \label{fig:stochastic-switch}
     \end{figure}
 
-    % @TODO: initial state is redundant here (it's the default)
     \begin{figure}[!htb]
       \centering
       \includegraphics[width=0.73\textwidth]{stochastic-oscillator}
-      \caption{\textbf{Effect of noise on oscillator functionality.} Input is set to \SI{5}{\nano M}, initial repressor state is $R1 = R2 = 50nM$, $R3 = R4 = 0nM$ and noise is scaled by $\frac{1}{55}$. Random seed: $73544911520192$.}
+      \caption{\textbf{Effect of noise on oscillator functionality.} Input is set to \SI{5}{\nano M} and noise is scaled by $\frac{1}{55}$. Random seed: $73544911520192$.}
       \label{fig:stochastic-oscillator}
     \end{figure}
 
@@ -227,7 +253,7 @@
     \end{figure}
 
     We verified that among the three functionalities, frequency division possesses less robustness to intrinsic noise: during the stage where input is applied and proteins are all at low concentrations, random fluctuations may cause unintended oscillations as a pair of repressors rise in concentration and prevent transcription of the other two.
-    An example of such irregular oscillatory behaviour is given in Figure \ref{fig:stochastic-freqdiv-skip}.
+    An example of such irregular oscillations is given in Figure \ref{fig:stochastic-freqdiv-skip}, in which a specific random seed and scaling factor were used to illustrate this behaviour.
 
 
 \section{Conclusion}
