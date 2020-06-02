@@ -5,9 +5,6 @@
   \citet{multif} have proposed a network capable of multiple functions, allowing for the selection of three different behaviours in a programmable fashion.
   This work provides an open-source reference implementation with which their \textit{in silico} experiments were replicated.
 
-  % @TODO: link figures explicitly
-  % Since figures are slightly out of order please provide a reference (or more explicitly label) which figures map to to which in the original implementation.
-
 
 \section{Introduction}
 
@@ -58,8 +55,8 @@
 
     \begin{figure}[!htbp]
       \centering
-      \includegraphics[width=0.9\textwidth]{freqdiv-square}
-      \caption{\textbf{Frequency division of clock-like input.} Input signal (concentration of protein $I$) is a square wave with amplitude of \SI{50}{\nano M}, period of $1.6 \times 10^5$ seconds and $50\%$ duty cycle.}
+      \includegraphics[width=0.86\textwidth]{freqdiv-square}
+      \caption{\textbf{Frequency division of clock-like input.} Here we replicate the original paper's Figure 3 with a square wave input with amplitude of \SI{50}{\nano M}, period of $1.6 \times 10^5$ seconds and $50\%$ duty cycle.}
       \label{fig:freqdiv-square}
     \end{figure}
 
@@ -69,19 +66,19 @@
 
     \begin{figure}[!htbp]
       \centering
-      \begin{subfigure}[t]{0.9\textwidth}
+      \begin{subfigure}[t]{0.86\textwidth}
         \centering
         \includegraphics[width=\linewidth]{freqdiv-full}
         \caption{\textbf{Frequency division in the full model.}}
         \label{fig:freqdiv-full}
       \end{subfigure}
-      \begin{subfigure}[t]{0.9\textwidth}
+      \begin{subfigure}[t]{0.86\textwidth}
         \centering
         \includegraphics[width=\linewidth]{freqdiv-qssa}
         \caption{\textbf{Frequency division in the reduced model.}}
         \label{fig:freqdiv-qssa}
       \end{subfigure}
-      \caption{\textbf{Comparing frequency division between full and reduced models.} Input varies as a sinusoidal signal with amplitude of \SI{50}{\nano M}, minimum of \SI{6}{\nano M} and a period of $0.9 \times 10^5$ seconds.}
+      \caption{\textbf{Comparing frequency division between full and reduced models.} This experiment replicates Figure 4 in the reference work. Input varies as a sinusoidal signal with amplitude of \SI{50}{\nano M}, minimum of \SI{6}{\nano M} and a period of $0.9 \times 10^5$ seconds.}
       \label{fig:freqdiv-sine}
     \end{figure}
 
@@ -97,7 +94,7 @@
     \begin{figure}[!htb]
       \centering
       \includegraphics[width=0.85\textwidth]{freqdiv-period}
-      \caption{\textbf{Locating the period-doubling bifurcation.} Output period is detected by measuring the distance between R1 concentration peaks. Other than input frequency and simulation length (each run was configured to take as long as five times the input period), parameters are the same as in Figure \ref{fig:freqdiv-full}.}
+      \caption{\textbf{Locating the period-doubling bifurcation.} Through this set of successive simulations we attempted to replicate Figure 7A from \citet{multif}. Output period is detected by measuring the distance between R1 concentration peaks. Other than input frequency and simulation length (each run was configured to take as long as five times the input period), parameters are the same as in Figure \ref{fig:freqdiv-full}.}
       \label{fig:freqdiv-period}
     \end{figure}
 
@@ -106,6 +103,7 @@
 
     \citet{multif} discovered the model's multiple extra functionalities by verifying different behaviours can be attained when input concentration is held constant at specific ranges.
     Experiments regarding the so-called bifurcation analysis were reproduced and Figures \ref{fig:bifurcation-1}-\ref{fig:bifurcation-4} show results under the full model.
+    These correspond to the simulation panels displayed within Figure 5 in the reference paper.
 
     The original study states experiments labeled $4c_{1}$ and $1b$ use the same initial conditions as $4c_{2}$ and $1a$ respectively.
     We believe these were typographical errors, as such settings would lead those pairs of experiments to the exact same results under deterministic semantics and this is not the exhibited behaviour.
@@ -165,11 +163,11 @@
   \subsection{Self-induced Oscillator}
 
     We verified the network's oscillatory dynamics in the region between saddle-node and Hopf bifurcations by measuring its output period for each given input concentration level.
-    Results illustrated in Figure \ref{fig:oscillator-astable} describe a relation with similar behaviour and the same near-vertical increase in period as input approaches the lower bistability region.
+    Results illustrated in our Figure \ref{fig:oscillator-astable} describe a relation with similar behaviour and the same near-vertical increase in period when input approaches the lower bistability region as Figure 6A in the original paper.
 
     \begin{figure}[!htb]
       \centering
-      \includegraphics[width=0.8\textwidth]{oscillator-astable}
+      \includegraphics[width=0.76\textwidth]{oscillator-astable}
       \caption{\textbf{Analysing oscillatory dynamics.} Simulation configuration is the same as in Figure \ref{fig:bifurcation-2} except for input levels, which are held in the range $[0.4 nM, 7 nM]$. Output period is detected by measuring the distance between R1 concentration peaks.}
       \label{fig:oscillator-astable}
     \end{figure}
@@ -212,7 +210,7 @@
         \caption{Switching from R1 \& R4 to R2 \& R3 at $I = 50 nM$.}
         \label{fig:switch-D}
       \end{subfigure}
-      \caption{\textbf{Demonstrating toggle-switch function.} Binding affinity $k_A$ is altered simultaneously for R1 and R2 in \ref{fig:switch-A} and \ref{fig:switch-C}, while in \ref{fig:switch-B} and \ref{fig:switch-D} the switch is performed by increasing the $k_A$ for R3 and R4. This variation is held between times $1.50 \times 10^5$ and $1.55 \times 10^5$ seconds.}
+      \caption{\textbf{Demonstrating toggle-switch function.} Binding affinity $k_A$ is altered simultaneously for R1 and R2 in \ref{fig:switch-A} and \ref{fig:switch-C}, while in \ref{fig:switch-B} and \ref{fig:switch-D} the switch is performed by increasing the $k_A$ for R3 and R4. This variation is held between times $1.50 \times 10^5$ and $1.55 \times 10^5$ seconds. Those experiments replicate what is shown in Figure 8 of the reference work.}
       \label{fig:switch}
     \end{figure}
 
@@ -222,27 +220,27 @@
     % @TODO: Euler-Maruyama algorithm
     % n.b. For stochastic simulations FE in inappropriate due to noise scaling. See Euler-Maruyama alogrithm for a stochastic adaptation. This could be in part the challenge with your noise scaling in the stochastic replication. The authors do not mention how they performed this in their supplemental. However if they did use ode45 the adaptive tolerances will bias noise towards a lower amplitude.
 
-    We implemented the \ac{cles} shown in the related supporting information document provided by \citet{multif}, but it was not possible to verify similar results without modifications to the noise-inducing function.
+    We implemented the \ac{cles} shown in the related supporting information document S6 provided by \citet{multif}, but it was not possible to verify similar results without modifications to the noise-inducing function.
     While original authors state the usage of Gaussian noise with zero mean and variance of 1, simply employing Octave's \code{randn} function -- which provides such a distribution \cite{randn} -- proved being too noisy as stochastic fluctuations began dominating the model's behaviour.
     It was found through trial and error that downscaling random numbers by a factor of $s \in [\frac{1}{100}, \frac{1}{10}]$ (and consequently scaling variance by $s^2$) would allow for results more similar to those in the reference work.
 
     \begin{figure}[!htb]
       \centering
-      \includegraphics[width=0.73\textwidth,height=0.365\textwidth]{stochastic-switch}
+      \includegraphics[width=0.70\textwidth,height=0.45\textwidth]{stochastic-switch}
       \caption{\textbf{Effect of noise on switching function.} Random seed is set to $73544911520192$ and fluctuations are scaled by $\frac{1}{55}$ for a fixed input of \SI{50}{\nano M}.}
       \label{fig:stochastic-switch}
     \end{figure}
 
     \begin{figure}[!htb]
       \centering
-      \includegraphics[width=0.73\textwidth]{stochastic-oscillator}
+      \includegraphics[width=0.75\textwidth]{stochastic-oscillator}
       \caption{\textbf{Effect of noise on oscillator functionality.} Input is set to \SI{5}{\nano M} and noise is scaled by $\frac{1}{55}$. Random seed: $73544911520192$.}
       \label{fig:stochastic-oscillator}
     \end{figure}
 
     \begin{figure}[!htbp]
       \centering
-      \includegraphics[width=0.73\textwidth]{stochastic-freqdiv-skip}
+      \includegraphics[width=0.8\textwidth]{stochastic-freqdiv-skip}
       \caption{\textbf{Irregular oscillations caused by stochastic fluctuations.} Input is the same as in Figure \ref{fig:freqdiv-full}. Random seed is set to $0.8977812586558097$ and noise is scaled by $\frac{1}{26}$.}
       % scaling = 1/26
       % seed = 8.977812586558097e-01 # 2 red, 2 magenta
