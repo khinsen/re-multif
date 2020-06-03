@@ -246,9 +246,6 @@
 
   \subsection{Stochastic Simulations}
 
-    % @TODO: Euler-Maruyama algorithm
-    % n.b. For stochastic simulations FE [forward Euler] in inappropriate due to noise scaling. See Euler-Maruyama alogrithm for a stochastic adaptation. This could be in part the challenge with your noise scaling in the stochastic replication. The authors do not mention how they performed this in their supplemental. However if they did use ode45 the adaptive tolerances will bias noise towards a lower amplitude.
-
     We implemented the \ac{cles} shown in the related supporting information document (``File S6'') provided by \citet{multif}, but it was not possible to verify similar results without modifications to the noise-inducing function.
     While original authors state the usage of Gaussian noise with zero mean and variance of 1, simply employing Octave's \code{randn} function -- which provides such a distribution \cite{randn} -- proved being too noisy as stochastic fluctuations began dominating the model's behaviour.
     It was found through trial and error that downscaling random numbers by a factor of $s \in [\frac{1}{100}, \frac{1}{10}]$ (and consequently scaling variance by $s^2$) would allow for results more similar to those in the reference work.

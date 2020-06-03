@@ -72,13 +72,23 @@ else
   error("Undefined model type: %s.", model);
 endif
 
+
 % data scaling for easier visualization
 timescale = 1e5; % 10^5 seconds
 molscale = 1e-9; % nM
 
+% peak-based period detection, uses the last period for more stability
+function T = period(Y, dt = 1)
+  [pks, idx] = findpeaks(Y);
+  if length(pks) < 2
+    T = 0;
+  else
+    T = (idx(end) - idx(end-1)) * dt;
+  endif
+endfunction
+
 
 % run the simulation defined by the current experiment's class
-% @TODO: there's code repetition among experiment classes, could be DRY'ed up
 if strcmp(experiment_class, 'single')
   % fix period and model
   I = @(t) I(t, input_period);
@@ -138,12 +148,7 @@ elseif strcmp(experiment_class, 'period')
     Rs = euler_simulate(temp_model, R, step_number, simulation_step);
 
     % detecting output period through [R1] peaks
-    [pks, idx] = findpeaks(Rs(:,1));
-    if length(pks) < 2
-      out_period = 0;
-    else
-      out_period = (idx(end) - idx(end-1)) * simulation_step; % last oscillation
-    endif
+    out_period = period(Rs(:,1), simulation_step);
 
     % store frequency response
     input_periods =  [input_periods  input_period];
@@ -174,12 +179,7 @@ elseif strcmp(experiment_class, 'oscillator')
     Rs = euler_simulate(temp_model, R, step_number, simulation_step);
 
     % detecting output period through [R1] peaks
-    [pks, idx] = findpeaks(Rs(:,1));
-    if length(pks) < 2
-      out_period = 0;
-    else
-      out_period = (idx(end) - idx(end-1)) * simulation_step; % last oscillation
-    endif
+    out_period = period(Rs(:,1), simulation_step);
 
     % store frequency response
     output_periods = [output_periods out_period];
@@ -234,6 +234,7 @@ elseif strcmp(experiment_class, 'switch')
 
   % plot model behaviour
   plot(t,R1s,'--m;R1;', t,R2s,':k;R2;', t,R3s,'-r;R3;', t,R4s,'-.g;R4;');
+  axis([min(t), max(t)]);
   pbaspect(plot_aspect);
   legend('location', 'east');
   xlabel("Time (10^5 seconds)");
