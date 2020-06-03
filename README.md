@@ -81,4 +81,4 @@ This repository is structured as follows:
 ### License
 
 The replication document, its figures and sources, as well as the implementation and its sources are released under a [Creative Commons Attribution 4.0 International license](LICENSE).
-This does not include the fonts inside the [doc/](doc/) folder or other parts of the original [ReScience Template](https://github.com/ReScience/template).
+This does not include the fonts inside the [doc/](doc/) folder or other parts of the original [ReScience Template](https://github.com/ReScience/template), which may be subject to different licensing terms.
