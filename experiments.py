@@ -40,8 +40,3 @@ for fig in os.listdir():
     print(proc.stderr.decode(), file=sys.stderr)
     if proc.returncode == 0:
         os.remove(fig)
-
-try:
-    os.rmdir(original_dir + 'temp')
-except OSError as e:
-   exit(e.errno)

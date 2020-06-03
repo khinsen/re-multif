@@ -106,7 +106,7 @@ if strcmp(experiment_class, 'single')
     subplot(2, 1, 2);
     plot(t, Is, 'b;I;');
     axis([-Inf,+Inf, 0,input_amplitude * 1.23 / molscale]);
-    pbaspect([1 0.334 1]);
+    pbaspect(plot_aspect);
     legend('location', 'east');
     xlabel("Time (10^5 seconds)");
     ylabel("Concentration (nM)");
@@ -116,7 +116,7 @@ if strcmp(experiment_class, 'single')
   % plot model behaviour
   plot(t,R1s,'--m;R1;', t,R2s,':k;R2;', t,R3s,'-r;R3;', t,R4s,'-.g;R4;');
   axis([min(t), max(t)]);
-  pbaspect([1 0.334 1]);
+  pbaspect(plot_aspect);
   legend('location', 'east');
   xlabel("Time (10^5 seconds)");
   ylabel("Concentration (nM)");
@@ -154,6 +154,7 @@ elseif strcmp(experiment_class, 'period')
   input_periods /= timescale;
   output_periods /= timescale;
   plot(input_periods, output_periods, '@b');
+  pbaspect(plot_aspect);
   xlabel("Input period (10^5 seconds)");
   ylabel("Output period (10^5 seconds)");
 
@@ -163,7 +164,7 @@ elseif strcmp(experiment_class, 'oscillator')
   DC_range = DC_range(1) : DC_range(2) : DC_range(3);
   output_periods = [];
 
-  for input_dc_level = DC_range
+  for input_dc_level = DC_range % foreach
     % fix this iteration's input and model
     temp_I = @(t) input_dc_level;
     temp_model = @(R, t) model(R, t, temp_I, k_r);
@@ -188,6 +189,8 @@ elseif strcmp(experiment_class, 'oscillator')
   DC_range /= molscale;
   output_periods /= timescale;
   plot(DC_range, output_periods, 'b');
+  pbaspect(plot_aspect);
+  legend('location', 'east');
   xlabel("Input concentration (nM)");
   ylabel("Period (10^5 seconds)");
 
@@ -231,6 +234,8 @@ elseif strcmp(experiment_class, 'switch')
 
   % plot model behaviour
   plot(t,R1s,'--m;R1;', t,R2s,':k;R2;', t,R3s,'-r;R3;', t,R4s,'-.g;R4;');
+  pbaspect(plot_aspect);
+  legend('location', 'east');
   xlabel("Time (10^5 seconds)");
   ylabel("Concentration (nM)");
 

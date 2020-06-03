@@ -74,3 +74,9 @@ stochastic-freqdiv-skip.pdf
 # name: plot_include_input_signal
 # type: bool
 0
+
+# name: plot_aspect
+# type: matrix
+# rows: 1
+# columns: 3
+ 1 0.334 1

@@ -21,6 +21,12 @@ bifurcation-3.pdf
 # type: bool
 0
 
+# name: plot_aspect
+# type: matrix
+# rows: 1
+# columns: 3
+ 1 0.334 1
+
 
 # name: R1
 # type: scalar

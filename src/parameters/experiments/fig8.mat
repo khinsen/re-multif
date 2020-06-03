@@ -55,3 +55,9 @@ constant
 # elements: 1
 # length: 22
 oscillator-astable.pdf
+
+# name: plot_aspect
+# type: string
+# elements: 1
+# length: 4
+auto

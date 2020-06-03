@@ -69,3 +69,9 @@ constant
 # elements: 1
 # length: 12
 switch-C.pdf
+
+# name: plot_aspect
+# type: string
+# elements: 1
+# length: 4
+auto

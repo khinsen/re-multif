@@ -14,7 +14,7 @@ all: article.pdf
 # CUSTOM BUILD RULES
 # -----------------------------------------------------------------------------
 metadata.tex: metadata.yaml
-	./yaml-to-latex.py -i $< -o $@
+	@ ./yaml-to-latex.py -i $< -o $@
 
 
 # MAIN LATEXMK RULE
@@ -26,10 +26,10 @@ metadata.tex: metadata.yaml
 # missing file reference and interactively asking you for an alternative.
 
 article.pdf: article.tex acronym.tex bibliography.bib img/* content.tex metadata.tex rescience.cls
-	latexmk -pdf -pdflatex="xelatex -interaction=nonstopmode" -use-make article.tex
+	@ latexmk -pdf -pdflatex="xelatex -interaction=nonstopmode" -use-make article.tex
 
 clean:
-	@latexmk -CA
-	@rm -f *.bbl
-	@rm -f *.run.xml
-	@rm -R __pycache__/
+	@- latexmk -CA
+	@- rm -f *.bbl
+	@- rm -f *.run.xml
+	@- rm -R __pycache__/

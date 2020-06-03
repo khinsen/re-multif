@@ -78,3 +78,9 @@ constant
 # elements: 1
 # length: 21
 stochastic-switch.pdf
+
+# name: plot_aspect
+# type: matrix
+# rows: 1
+# columns: 3
+ 1 0.334 1

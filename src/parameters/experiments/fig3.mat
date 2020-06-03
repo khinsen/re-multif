@@ -58,3 +58,9 @@ sine
 # elements: 1
 # length: 18
 freqdiv-period.pdf
+
+# name: plot_aspect
+# type: string
+# elements: 1
+# length: 4
+auto

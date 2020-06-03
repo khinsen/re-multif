@@ -21,6 +21,12 @@ bifurcation-4c2.pdf
 # type: bool
 0
 
+# name: plot_aspect
+# type: string
+# elements: 1
+# length: 4
+auto
+
 
 # name: R1
 # type: scalar

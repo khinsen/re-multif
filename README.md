@@ -1,5 +1,6 @@
 # [Re] A Multi-Functional Synthetic Gene Network
 
+<!-- @TODO: update Zenodo DOI page afeter re-release -->
 [![DOI](https://zenodo.org/badge/214520225.svg)](https://zenodo.org/badge/latestdoi/214520225)
 
 Here we replicate the work of Purcell, di Bernardo, Grierson and Savery on [A Multi-Functional Synthetic Gene Network: A Frequency Multiplier, Oscillator and Switch](https://dx.doi.org/10.1371%2Fjournal.pone.0016140) for [ReScience](https://rescience.github.io/).
@@ -9,7 +10,7 @@ Here we replicate the work of Purcell, di Bernardo, Grierson and Savery on [A Mu
 
 ## Reproducing our work
 
-The simulated model is implemented in Octave (5.2.0) and needs an additional `signal` package (v1.4.1) -- which in turn depends on the `control` extension (v3.2.0).
+The simulated model is implemented in Octave (v5.2.0) and needs an additional `signal` package (v1.4.1) - which in turn depends on the `control` extension (v3.2.0).
 These are available at [Octave Forge](https://octave.sourceforge.io/) and can be installed directly from the Octave command line:
 
 ```octave
@@ -24,7 +25,7 @@ Also check out the experiment configurations inside the [src/parameters/experime
 The network's reaction parameters do not change and are separately loaded from [src/parameters/network.mat](src/parameters/network.mat).
 
 To reproduce our experiments, make sure `octave` is installed and has access to the aforementioned packages, `python3` is also required.
-The script [experiments.py](experiments.py) drives the execution of the simulations and figure generation.
+The script [experiments.py](experiments.py) drives the execution of all simulations and figure generation, so it takes a while to complete.
 It uses the `pdfcrop` command line tool to trim pdf whitespaces, so that is needed as well.
 After all is ready, simply run:
 

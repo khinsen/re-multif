@@ -42,8 +42,9 @@ simulation_total_time = 4.0e5; %(s), overrided in all but 'single' | 'switch'
 simulation_step = 60; %(s)
 
 % plot configuration
-plot_output_filename = "stochastic-freqdiv.pdf"; % `filename.extension`
+plot_output_filename = "stochastic-freqdiv.pdf"; % saved plot filename
 plot_include_input_signal = false; % (bool), only used in 'single' experiments
+plot_aspect = [1 0.334 1]; % vector or "auto" that is passed to pbaspect()
 
 % save experiment configuration in plain text
 save "parameters.mat" ...
@@ -55,4 +56,4 @@ save "parameters.mat" ...
      R1 R2 R3 R4 ...
      input_type input_dc_level input_period input_amplitude input_duty_cycle ...
      simulation_total_time simulation_step ...
-     plot_output_filename plot_include_input_signal;
+     plot_output_filename plot_include_input_signal plot_aspect;
