@@ -4,7 +4,7 @@
 
 Here we replicate the work of Purcell, di Bernardo, Grierson and Savery on [A Multi-Functional Synthetic Gene Network: A Frequency Multiplier, Oscillator and Switch](https://doi.org/10.1371/journal.pone.0016140) for [ReScience](https://rescience.github.io/).
 
-![Network designed by Purcell et al.](SBOL.png)
+![Network designed by Purcell et al.](sbol.png)
 
 
 ## Reproducing our work
