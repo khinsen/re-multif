@@ -9,7 +9,7 @@ Here we replicate the work of Purcell, di Bernardo, Grierson and Savery on [A Mu
 
 ## Reproducing our work
 
-The simulated model is implemented in Octave (tested in version 5.2.0) and needs an additional [`signal`](https://octave.sourceforge.io/signal/) package (1.4.1) - which in turn depends on the [`control`](https://octave.sourceforge.io/control/) extension (3.2.0).
+The simulated model is implemented in Octave (tested in versions 5.2.0 and 6.2.0) and needs an additional [`signal`](https://octave.sourceforge.io/signal/) package (1.4.1) - which in turn depends on the [`control`](https://octave.sourceforge.io/control/) extension (3.2.0).
 These are available in [Octave Forge](https://octave.sourceforge.io/) and can be installed directly from the **Octave command line**:
 
 ```octave
