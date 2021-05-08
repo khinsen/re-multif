@@ -4,17 +4,17 @@
 
 Here we replicate the work of Purcell, di Bernardo, Grierson and Savery on [A Multi-Functional Synthetic Gene Network: A Frequency Multiplier, Oscillator and Switch](https://doi.org/10.1371/journal.pone.0016140) for [ReScience](https://rescience.github.io/).
 
-![Network designed by Purcell et al.](sbol.png)
+![SBOL](sbol.png)
 
 
 ## Reproducing our work
 
-The simulated model is implemented in Octave (v5.2.0) and needs an additional `signal` package (v1.4.1) - which in turn depends on the `control` extension (v3.2.0).
-These are available at [Octave Forge](https://octave.sourceforge.io/) and can be installed directly from the Octave command line:
+The simulated model is implemented in Octave (tested in version 5.2.0) and needs an additional [`signal`](https://octave.sourceforge.io/signal/) package (1.4.1) - which in turn depends on the [`control`](https://octave.sourceforge.io/control/) extension (3.2.0).
+These are available in [Octave Forge](https://octave.sourceforge.io/) and can be installed directly from the **Octave command line**:
 
 ```octave
-> pkg install -forge control
-> pkg install -forge signal
+> pkg install 'https://octave.sourceforge.io/download.php?package=control-3.2.0.tar.gz'
+> pkg install 'https://octave.sourceforge.io/download.php?package=signal-1.4.1.tar.gz'
 ```
 
 Each experiment is configured in a separate `.mat` file following Octave's standard human-readable ASCII format.

@@ -62,9 +62,9 @@
     \end{equation*}
   \end{multicols}
 
-  All numerical simulations were performed in Octave 5.1.0 using Euler's method with a fixed step size of $60$ seconds.
-  This differs from MATLAB's \code{ode45} solver which was chosen by \citet{multif}.
-  The choice is justified based on the duration of experiments, the shortest of which take at least four days (virtual simulated time) in order to observe a couple of periods on the oscillating output of the frequency divider.
+  All numerical simulations were performed in Octave 5.2.0 (with additional packages \code{signal-1.4.1} and \code{control-3.2.0}) using Euler's method with a step size of $60$ seconds.
+  This differs from the MATLAB \code{ode45} solver used by \citet{multif}.
+  The choice is justified by the duration of experiments, the shortest of which take at least four days (virtual simulated time) in order to observe a couple of periods on the oscillating output of the frequency divider.
   Due to the different integration methods employed, some numerical mismatch is expected, but qualitative behaviour should remain the same.
 
   Every deterministic experiment was carried in two systems: one considering the whole set of \ac{ode}s and another with the \ac{qssa} approximation that is used throughout that study.
@@ -120,7 +120,7 @@
 
     \begin{figure}[!htb]
       \centering
-      \includegraphics[width=0.85\textwidth]{freqdiv-period}
+      \includegraphics[width=0.83\textwidth]{freqdiv-period}
       \caption{\textbf{Locating the period-doubling bifurcation.} Through this set of successive simulations we attempted to replicate Figure 7A from \citet{multif}. Output period is detected by measuring the distance between R1 concentration peaks. Other than input frequency and simulation length (each run was configured to take as long as five times the input period), parameters are the same as in Figure \ref{fig:freqdiv-full}.}
       \label{fig:freqdiv-period}
     \end{figure}
