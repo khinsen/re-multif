@@ -43,12 +43,12 @@ noise = @(t, len) 0;
 if strcmp(model, 'QSSA')
   alpha = k_tl * beta / delta_m;
   gamma = k_tl * P_tc / delta_m;
-  model = @(R, t, I, k_r) qssa(R, t, I, ...
+  model = @(t, R, I, k_r) qssa(t, R, I, ...
                                Ha, Hr, k_a, k_r, ...
                                alpha, gamma, delta_x);
 elseif strcmp(model, 'Full')
   R = [R [0 0 0 0 0 0 0 0]]; % insert starting mRNAs into molecule vector
-  model = @(R, t, I, k_r) full_ode(R, t, I, ...
+  model = @(t, R, I, k_r) full_ode(t, R, I, ...
                                    Ha, Hr, k_a, k_r, ...
                                    k_tl, beta, P_tc, delta_x, delta_m);
 elseif strcmp(model, 'Stochastic')
@@ -64,7 +64,7 @@ elseif strcmp(model, 'Stochastic')
   noise_fn = @(t, col) noise(round(t / simulation_step) + 1, col);
 
   % set model constructor
-  model = @(R, t, I, k_r) stochastic(R, t, I, noise_fn, ...
+  model = @(t, R, I, k_r) stochastic(t, R, I, noise_fn, ...
                                      Ha, Hr, k_a, k_r, ...
                                      k_tl, beta, P_tc, delta_x, delta_m);
 else
@@ -91,7 +91,7 @@ endfunction
 if strcmp(experiment_class, 'single')
   % fix period and model
   I = @(t) I(t, input_period);
-  model = @(R, t) model(R, t, I, k_r);
+  model = @(t, R) model(t, R, I, k_r);
 
   % run single simulatin
   step_number = ceil(simulation_total_time / simulation_step);
@@ -139,7 +139,7 @@ elseif strcmp(experiment_class, 'period')
   for input_period = T_range(1) : T_range(2) : T_range(3)
     % fix this iteration's input and model
     temp_I = @(t) I(t, input_period);
-    temp_model = @(R, t) model(R, t, temp_I, k_r);
+    temp_model = @(t, R) model(t, R, temp_I, k_r);
 
     % actual simulation
     simulation_total_time = 5 * input_period;
@@ -171,7 +171,7 @@ elseif strcmp(experiment_class, 'oscillator')
   for input_dc_level = DC_range % foreach
     % fix this iteration's input and model
     temp_I = @(t) input_dc_level;
-    temp_model = @(R, t) model(R, t, temp_I, k_r);
+    temp_model = @(t, R) model(t, R, temp_I, k_r);
 
     % actual simulation
     step_number = ceil(simulation_total_time / simulation_step);
@@ -203,8 +203,8 @@ elseif strcmp(experiment_class, 'switch')
 
   % fix input and models
   I = @(t) I(t, input_period);
-  normal_model = @(R, t) model(R, t, I, k_r);
-  triggered_model = @(R, t) model(R, t, I, k_r + switch_R*switch_trigger_delta);
+  normal_model = @(t, R) model(t, R, I, k_r);
+  triggered_model = @(t, R) model(t, R, I, k_r + switch_R*switch_trigger_delta);
 
   % 3-step simulation with different binding affinities
   prelude = euler_simulate(normal_model, R, prelude_steps, simulation_step);
