@@ -1,11 +1,3 @@
-\belowpdfbookmark{Abstract}{sec:abstract}
-
-  \noindent Studies in the field of synthetic biology make constant additions to existing repositories of biological circuits, as well as to the theoretical understanding of their capabilities.
-  Although many synthetic gene networks have been demonstrated able to perform computations using biomolecules, until recently the majority of such models were engineered to implement the functionality of single reusable circuit parts.
-  \citet{multif} have proposed a network capable of multiple functions, allowing for the selection of three different behaviours in a programmable fashion.
-  This work provides an open-source reference implementation with which their \textit{in silico} experiments were replicated.
-
-
 \section{Introduction}
 
   The field of biomolecular computing -- and \acs{dna}-based computing in particular -- has advanced remarkably over the last years \cite{history}.
@@ -19,7 +11,7 @@
 
   \citet{multif} presented the \textit{in silico} design of a novel genetic regulatory network which performs frequency division on an oscillating input.
   During experiments, that model was also discovered able to behave as a self-induced oscillator or toggle switch -- thus ressembling the most successful electronic \ac{ic} ever developed, the 555 timer \acs{ic} \cite{ic555}.
-  We believe such multi-functionality may lead to more programmable and reusable components in biological computing and this has led to the reproduction of simulations described in that paper on an open-source implementation of the aforementioned model.
+  We believe such multi-functionality may lead to more programmable and reusable components in biological computing. This led us to the reproduction of simulations described in that paper on an open-source implementation of the aforementioned model.
 
 
 \section{Methods}
@@ -62,7 +54,7 @@
     \end{equation*}
   \end{multicols}
 
-  All numerical simulations were performed in Octave 5.2.0 (with additional packages \code{signal-1.4.1} and \code{control-3.2.0}) using Euler's method with a step size of $60$ seconds.
+  All numerical simulations were performed in Octave 5.2.0 -- with additional packages \code{signal-1.4.1} and \code{control-3.2.0} -- using Euler's method with a step size of $60$ seconds.
   This differs from the MATLAB \code{ode45} solver used by \citet{multif}.
   The choice is justified by the duration of experiments, the shortest of which take at least four days (virtual simulated time) in order to observe a couple of periods on the oscillating output of the frequency divider.
   Due to the different integration methods employed, some numerical mismatch is expected, but qualitative behaviour should remain the same.
@@ -112,7 +104,7 @@
     As illustrated in Figures \ref{fig:freqdiv-full} and \ref{fig:freqdiv-qssa}, while R1 and R4 concentrations in the full model reach \textit{maxima} valued at \SI{238.29}{\nano M} and \SI{87.62}{\nano M} respectively, the reduced model goes up to \SI{283.96}{\nano M} and \SI{113.05}{\nano M} for each of these proteins (peak values of R3 follow R1 closely and the same happens with R2 and R4).
     This offset distinguishing the two models happens because the \ac{qssa} used to derive the reduced \ac{ode} system considers a separation of time-scales between reactions which regulate \acs{mrna} production and those which describe protein translation.
     In the approximation, the former reactions are assumed to reach equilibrium instantaneously relative to the latter.
-    Thus, the difference is a consequence of the fact that the original model maintains itself in a dynamic state that never actually reaches equilibrium \cite{ingalls}, as it perpetually oscillates.
+    Thus, the difference comes from the fact that the original model maintains itself in a dynamic state that never actually reaches equilibrium \cite{ingalls}, as it perpetually oscillates.
 
     As mentioned in the original study, frequency division functionality can only be observed after a specific period threshold.
     We ran experiments over a range of input frequencies and found the period-doubling bifurcation to be located near values of $0.8 \times 10^5$ seconds ($\sim 22.22$ hours) in both full and reduced models.
@@ -274,22 +266,22 @@
       \label{fig:stochastic-freqdiv-skip}
     \end{figure}
 
-    We verified that among the three functionalities, frequency division possesses less robustness to intrinsic noise: during the stage when input is applied and proteins are all at low concentrations, random fluctuations may cause unintended oscillations as a pair of repressors rise in concentration and prevent transcription of the other two.
-    An example of such irregular oscillations is given in Figure \ref{fig:stochastic-freqdiv-skip}, in which a specific random seed and scaling factor pairing that was found to illustrate this behaviour is used.
+    We verified that among the three functionalities, frequency division appears less robust to intrinsic noise: when input is applied and proteins are all at low concentrations, random fluctuations may cause unintended oscillations as a pair of repressors rise in concentration and prevent transcription of the other two.
+    An example of such irregular oscillations is given in Figure \ref{fig:stochastic-freqdiv-skip}, in which we use a specific pairing of random seed and scaling factor to illustrate this behaviour.
 
 
 \section{Conclusions}
 
   All operation configurations in the multi-functional synthetic gene network were verified and to a large degree the results presented in \cite{multif} were replicated.
   It should be emphasised that the original work stands as an example of reproducible science, with detailed descriptions of model derivation, parameter decisions and extra experiments inside openly available supplementary material.
-  Simplifications made using the \ac{qssa} to reduce the full \ac{ode} system proved being a good approximation as even though some small quantitative differences were observed -- and those could be due to the different integration methods as well -- there was no impact on the network's overall dynamics.
+  The \ac{qssa} simplification proved being a good approximation of the full \ac{ode} system, since even though some small quantitative differences were observed -- and those could be due to the different integration methods as well -- there was no impact on the network's overall dynamics.
 
   However, stochastic simulations would not provide the expected results without an expressive reduction to noise variance.
   In fact, Gaussian noise seems capable of undermining frequency division functionality to some degree.
   Additionally, the period-doubling bifurcation was empirically found to be at a much lower frequency than what is stated in the reference study.
   Upon correspondence with the authors, it was speculated that some parameter mismatch could have caused this displacement, as qualitative behaviour was mostly maintained.
 
-  We highlight the idea that as synthetic networks grow in complexity and size, multi-functionality may arise more frequently and become difficult to avoid.
-  While this can bring the benefits of reusable programmable components, it might also end up becoming a nuisance if models start behaving unexpectedly under the influence of certain inputs.
+  We highlight the idea that as synthetic networks grow in complexity and size, multi-functionality may arise more frequently and even become difficult to avoid.
+  While this can bring the benefits of reusable programmable components, it might also become a nuisance if models start behaving unexpectedly under the influence of certain inputs.
   At last, we believe further works should focus on a deeper exploration of parameter space.
   The motivation for this is double: it may allow for the characterisation of \textit{in vivo} implementation designs with reusable biological parts and will potentially verify the complete set of specifications for this programmable genetic component and its multiple operating modes.
